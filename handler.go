@@ -3,7 +3,7 @@ package gopherlog
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kisielk/raven-go/raven"
+	raven "github.com/getsentry/raven-go"
 	"io"
 	"strings"
 	"time"
@@ -22,6 +22,15 @@ var (
 		ERROR:    50,
 		CRITICAL: 60,
 		FATAL:    60,
+	}
+
+	ravenLevel = map[Level]raven.Severity{
+		DEBUG:    raven.DEBUG,
+		INFO:     raven.INFO,
+		WARNING:  raven.WARNING,
+		ERROR:    raven.ERROR,
+		CRITICAL: raven.ERROR,
+		FATAL:    raven.FATAL,
 	}
 )
 
@@ -87,24 +96,28 @@ func NewRavenHandler(projectName, dsn string) *RavenHandler {
 	return &RavenHandler{DSN: dsn, ProjectName: projectName}
 }
 
-func (r *RavenHandler) dataToEvent(l Level, message string, data map[string]interface{}) *raven.Event {
-	//TODO: fix date formatting
-	//TODO: figure out how to add other fields
+func (r *RavenHandler) dataToEvent(l Level, message string, data map[string]interface{}) *raven.Packet {
 	//EventId is left as default. It will be filled by go-raven
-	ev := &raven.Event{
+	ev := &raven.Packet{
+		Message: message,
+
 		Project:   r.ProjectName,
-		Message:   message,
-		Timestamp: data["time"].(time.Time).Format(SENTRY_TIME_FORMAT),
-		Level:     l.String(),
-		Logger:    data["name"].(string),
+		Timestamp: raven.Timestamp(data["time"].(time.Time)),
+		Level:     ravenLevel[l],
+
+		Logger: data["name"].(string),
+		Extra:  data,
 	}
+
+	delete(data, "name")
+	delete(data, "time")
 
 	return ev
 }
 
 func (r *RavenHandler) Log(l Level, message string, data map[string]interface{}) error {
 	if r.client == nil {
-		if client, err := raven.NewClient(r.DSN); err != nil {
+		if client, err := raven.NewClient(r.DSN, nil); err != nil {
 			return err
 		} else {
 			r.client = client
@@ -112,6 +125,11 @@ func (r *RavenHandler) Log(l Level, message string, data map[string]interface{})
 	}
 
 	ev := r.dataToEvent(l, message, data)
-	err := r.client.Capture(ev)
-	return err
+	_, errChan := r.client.Capture(ev, nil)
+	select {
+	case e := <-errChan:
+		return e
+	default:
+		return nil
+	}
 }

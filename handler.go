@@ -126,8 +126,5 @@ func (r *RavenHandler) Log(l Level, message string, data map[string]interface{})
 
 	ev := r.dataToEvent(l, message, data)
 	_, errChan := r.client.Capture(ev, nil)
-	if err := <-errChan; err != nil {
-		return err
-	}
-	return nil
+	return <-errChan
 }

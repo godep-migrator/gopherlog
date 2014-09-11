@@ -1,0 +1,44 @@
+{
+	"ImportPath": "github.com/gigaroby/gopherlog",
+	"GoVersion": "go1.1.2",
+	"Deps": [
+		{
+			"ImportPath": "github.com/getsentry/raven-go",
+			"Rev": "1ae8a89da90a71ca1bb7648919bb30928acaab46"
+		},
+		{
+			"ImportPath": "github.com/jacobsa/oglematchers",
+			"Rev": "00a5a2616650f55dd84f982eeb13153c5e1cffad"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/assertions",
+			"Comment": "1.4.0-7-gaba95ce",
+			"Rev": "aba95ceb82de3be8a1a93346b8361c2c890a4301"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/convey",
+			"Comment": "1.4.0-7-gaba95ce",
+			"Rev": "aba95ceb82de3be8a1a93346b8361c2c890a4301"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/execution",
+			"Comment": "1.4.0-7-gaba95ce",
+			"Rev": "aba95ceb82de3be8a1a93346b8361c2c890a4301"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/gotest",
+			"Comment": "1.4.0-7-gaba95ce",
+			"Rev": "aba95ceb82de3be8a1a93346b8361c2c890a4301"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/printing",
+			"Comment": "1.4.0-7-gaba95ce",
+			"Rev": "aba95ceb82de3be8a1a93346b8361c2c890a4301"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/reporting",
+			"Comment": "1.4.0-7-gaba95ce",
+			"Rev": "aba95ceb82de3be8a1a93346b8361c2c890a4301"
+		}
+	]
+}
